@@ -1,17 +1,15 @@
 ###
-jspsych-plane.coffee
+jspsych-mouselab-mdp.coffee
 Fred Callaway
 
-An MDP mdp in which the participant plans flights to
-maximize profit.
-
+https://github.com/fredcallaway/Mouselab-MDP
 ###
 
 # coffeelint: disable=max_line_length
 mdp = undefined
 
 
-jsPsych.plugins['graph'] = do ->
+jsPsych.plugins['mouselab-mdp'] = do ->
 
   PRINT = (args...) -> console.log args...
   NULL = (args...) -> null
@@ -86,10 +84,10 @@ jsPsych.plugins['graph'] = do ->
 
 
 # ============================ #
-# ========= GraphMDP ========= #
+# ========= MouselabMDP ========= #
 # ============================ #
   
-  class GraphMDP
+  class MouselabMDP
     constructor: (config) ->
       {
         @display  # html display element
@@ -97,21 +95,27 @@ jsPsych.plugins['graph'] = do ->
         @layout  # defines position of states
         @initial  # initial state of player
 
-        @click=null  # function (s) -> (reward, label)
+
+        @stateLabels=null
+        @stateDisplay='never'
+        @stateClickCost=0
+        @edgeLabels='reward'
+        @edgeDisplay='always'
+        @edgeClickCost=0
+
+        
         @keys=KEYS  # mapping from actions to keycodes
         @trialIndex=TRIAL_INDEX  # number of trial (starts from 1)
-
-        @playerImage='/static/images/plane.png'
-        @showRewards=true
-        @showStateNames=false
+        @playerImage='static/images/plane.png'
         SIZE=120
 
         leftMessage='Round: 1/1'
         centerMessage='&nbsp;'
-        rightMessage='Score: <span id=graph-score/>'
+        rightMessage='Score: <span id=mouselab-score/>'
         lowerMessage=KEY_DESCRIPTION
       } = config
 
+      _.extend this, config
       checkObj this
 
       @invKeys = _.invert @keys
@@ -122,36 +126,50 @@ jsPsych.plugins['graph'] = do ->
         rt: []
         actions: []
         actionTimes: []
-        clicks: []
-        clickTimes: []
+        queries: {
+          click: {
+            state: {'target': [], 'time': []}
+            edge: {'target': [], 'time': []}
+          }
+          mouseover: {
+            state: {'target': [], 'time': []}
+            edge: {'target': [], 'time': []}
+          }
+          mouseout: {
+            state: {'target': [], 'time': []}
+            edge: {'target': [], 'time': []}
+          }
+        }
+        # clicks: []
+        # clickTimes: []
 
       @leftMessage = $('<div>',
-        id: 'graph-msg-left'
-        class: 'graph-header'
+        id: 'mouselab-msg-left'
+        class: 'mouselab-header'
         html: leftMessage).appendTo @display
 
       @centerMessage = $('<div>',
-        id: 'graph-msg-center'
-        class: 'graph-header'
+        id: 'mouselab-msg-center'
+        class: 'mouselab-header'
         html: centerMessage).appendTo @display
 
       @rightMessage = $('<div>',
-        id: 'graph-msg-right',
-        class: 'graph-header'
+        id: 'mouselab-msg-right',
+        class: 'mouselab-header'
         html: rightMessage).appendTo @display
       @addScore 0
           
       @canvasElement = $('<canvas>',
-        id: 'graph-canvas',
+        id: 'mouselab-canvas',
       ).attr(width: 500, height: 500).appendTo @display
 
       @lowerMessage = $('<div>',
-        id: 'graph-msg-bottom'
+        id: 'mouselab-msg-bottom'
         html: lowerMessage or '&nbsp'
       ).appendTo @display
       
       mdp = this
-      LOG_INFO 'new GraphMDP', this
+      LOG_INFO 'new MouselabMDP', this
 
 
     # ---------- Responding to user input ---------- #
@@ -164,19 +182,69 @@ jsPsych.plugins['graph'] = do ->
 
       [r, s1] = @graph[s0][a]
       LOG_DEBUG "#{s0}, #{a} -> #{r}, #{s1}"
-      @addScore r
 
       s1g = @states[s1]
       @player.animate {left: s1g.left, top: s1g.top},
           duration: dist(@player, s0) * 4
           onChange: @canvas.renderAll.bind(@canvas)
           onComplete: =>
+            @addScore r
             @arrive s1
 
     # Called when a state is clicked on.
-    handleClick: (s) =>
-      if @click?
-        @click s
+    clickState: (g, s) =>
+      LOG_DEBUG "clickState #{s}"
+      if @stateLabels and @stateDisplay is 'click' and not g.label.text
+        g.setLabel @stateLabels[s]
+        @recordQuery 'click', 'state', s
+
+    mouseoverState: (g, s) =>
+      LOG_DEBUG "mouseoverState #{s}"
+      if @stateLabels and @stateDisplay is 'hover'
+        g.setLabel @stateLabels[s]
+        @recordQuery 'mouseover', 'state', s
+
+    mouseoutState: (g, s) =>
+      LOG_DEBUG "mouseoutState #{s}"
+      if @stateLabels and @stateDisplay is 'hover'
+        g.setLabel ''
+        @recordQuery 'mouseout', 'state', s
+
+    clickEdge: (g, s0, r, s1) =>
+      LOG_DEBUG "clickEdge #{s0} #{r} #{s1}"
+      if @edgeLabels and @edgeDisplay is 'click' and not g.label.text
+        g.setLabel @getEdgeLabel s0, r, s1
+        @recordQuery 'click', 'edge', "#{s0}__#{s1}"
+
+    mouseoverEdge: (g, s0, r, s1) =>
+      LOG_DEBUG "mouseoverEdge #{s0} #{r} #{s1}"
+      if @edgeLabels and @edgeDisplay is 'hover'
+        g.setLabel @getEdgeLabel s0, r, s1
+        @recordQuery 'mouseover', 'edge', "#{s0}__#{s1}"
+
+    mouseoutEdge: (g, s0, r, s1) =>
+      LOG_DEBUG "mouseoutEdge #{s0} #{r} #{s1}"
+      if @edgeLabels and @edgeDisplay is 'hover'
+        g.setLabel ''
+        @recordQuery 'mouseout', 'edge', "#{s0}__#{s1}"
+
+    getEdgeLabel: (s0, r, s1) =>
+      if @edgeLabels is 'reward'
+        String(r)
+      else
+        @edgeLabels["#{s0}__#{s1}"]
+
+    recordQuery: (queryType, targetType, target) =>
+      @canvas.renderAll()
+      LOG_DEBUG "recordQuery #{queryType} #{targetType} #{target}"
+      # @data["#{queryType}_#{targetType}_#{target}"]
+      @data.queries[queryType][targetType].target.push target
+      @data.queries[queryType][targetType].time.push Date.now() - @initTime
+
+
+
+
+    # ---------- Updating state ---------- #
 
     # Called when the player arrives in a new state.
     arrive: (s) =>
@@ -207,8 +275,8 @@ jsPsych.plugins['graph'] = do ->
 
     addScore: (v) =>
       @data.score = round (@data.score + v)
-      $('#graph-score').html '$' + @data.score
-      $('#graph-score').css 'color', redGreen @data.score
+      $('#mouselab-score').html '$' + @data.score
+      $('#mouselab-score').css 'color', redGreen @data.score
 
 
     # ---------- Starting the trial ---------- #
@@ -246,19 +314,20 @@ jsPsych.plugins['graph'] = do ->
         [xs, ys] = _.unzip (_.values @layout)
         [(_.max xs) + 1, (_.max ys) + 1]
       @canvasElement.attr(width: width * SIZE, height: height * SIZE)
-      @canvas = new fabric.Canvas 'graph-canvas', selection: false
+      @canvas = new fabric.Canvas 'mouselab-canvas', selection: false
 
       @states = {}
-      for name, location of @layout
+      for s, location of @layout
         [x, y] = location
-        @states[name] = @draw new State name, x, y,
+        @states[s] = @draw new State s, x, y,
           fill: '#bbb'
-          label: if @showStateNames then name else ''
+          label: if @stateDisplay is 'always' then @stateLabels[s] else ''
 
       for s0, actions of @graph
-        for a, [reward, s1] of actions
-          @draw new Edge @states[s0], @states[s1],
-            reward: if @showRewards then reward else ''
+        for a, [r, s1] of actions
+          @draw new Edge @states[s0], r, @states[s1],
+            label: if @edgeDisplay is 'always' then @getEdgeLabel s0, r, s1 else ''
+
 
 
     # ---------- ENDING THE TRIAL ---------- #
@@ -286,8 +355,8 @@ jsPsych.plugins['graph'] = do ->
 
   class State extends fabric.Group
     constructor: (@name, left, top, config={}) ->
-      left = left * SIZE
-      top = top * SIZE
+      left = (left + 0.5) * SIZE
+      top = (top + 0.5) * SIZE
       conf =
         left: left
         top: top
@@ -295,21 +364,31 @@ jsPsych.plugins['graph'] = do ->
         radius: SIZE / 4
         label: ''
       _.extend conf, config
-      # @x = @left = left
-      # @y = @top = top
-      @on('mousedown', -> mdp.handleClick @name)
+
+      # Due to a quirk in Fabric, the maximum width of the label
+      # is set when the object is initialized (the call to super).
+      # Thus, we must initialize the label with a placeholder, then
+      # set it to the proper value afterwards.
       @circle = new fabric.Circle conf
-      @label = new Text conf.label, left, top,
+      @label = new Text '----------', left, top,
         fontSize: SIZE / 6
         fill: '#44d'
+
       @radius = @circle.radius
       @left = @circle.left
       @top = @circle.top
+
+      @on('mousedown', -> mdp.clickState this, @name)
+      @on('mouseover', -> mdp.mouseoverState this, @name)
+      @on('mouseout', -> mdp.mouseoutState this, @name)
       super [@circle, @label]
+      @setLabel conf.label
+
 
     setLabel: (txt) ->
+      # LOG_DEBUG "setLabel #{txt}"
       if txt
-        @label.setText txt
+        @label.setText "#{txt}"
         @label.setFill (redGreen txt)
       else
         @label.setText ''
@@ -317,14 +396,14 @@ jsPsych.plugins['graph'] = do ->
 
 
   class Edge extends fabric.Group
-    constructor: (c1, c2, conf={}) ->
+    constructor: (c1, reward, c2, config={}) ->
       {
-        reward
         spacing=8
         adjX=0
         adjY=0
         rotateLabel=false
-      } = conf
+        label=''
+      } = config
 
       [x1, y1, x2, y2] = [c1.left + adjX, c1.top + adjY, c2.left + adjX, c2.top + adjY]
 
@@ -334,18 +413,30 @@ jsPsych.plugins['graph'] = do ->
       ang = (@arrow.ang + Math.PI / 2) % (Math.PI * 2)
       if 0.5 * Math.PI <= ang <= 1.5 * Math.PI
         ang += Math.PI
-
-      
       [labX, labY] = polarMove(x1, y1, angle(x1, y1, x2, y2), SIZE * 0.45)
 
-      txt = "#{reward}"
-      @label = new Text txt, labX, labY,
+      # See note about placeholder in State.
+      @label = new Text '----------', labX, labY,
         angle: if rotateLabel then (ang * 180 / Math.PI) else 0
-        fill: redGreen reward
+        fill: redGreen label
         fontSize: SIZE / 6
         textBackgroundColor: 'white'
-      
+
+      @on('mousedown', -> mdp.clickEdge this, c1.name, reward, c2.name)
+      @on('mouseover', -> mdp.mouseoverEdge this, c1.name, reward, c2.name)
+      @on('mouseout', -> mdp.mouseoutEdge this, c1.name, reward, c2.name)
       super [@arrow, @label]
+      @setLabel label
+
+    setLabel: (txt) ->
+      # LOG_DEBUG "setLabel #{txt}"
+      if txt
+        @label.setText "#{txt}"
+        @label.setFill (redGreen txt)
+      else
+        @label.setText ''
+      @dirty = true
+      
 
 
   class Arrow extends fabric.Group
@@ -403,7 +494,7 @@ jsPsych.plugins['graph'] = do ->
       console.log 'trialConfig', trialConfig
 
       display_element.empty()
-      trial = new GraphMDP trialConfig
+      trial = new MouselabMDP trialConfig
       trial.run()
       if trialConfig._block
         trialConfig._block.trialCount += 1

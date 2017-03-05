@@ -19,19 +19,10 @@ loadJson = (file) ->
   return result.responseJSON
 
 $(window).on 'load', ->
-  # Load data and test connection to server.
-  expData = loadJson "/static/json/condition_0_0.json"
-  console.log 'expData', expData
-  initializeExperiment expData.blocks
+  trials = loadJson "static/json/trials.json"
+  initializeExperiment trials
 
-createStartButton = ->
-  document.getElementById("loader").style.display = "none"
-  document.getElementById("successLoad").style.display = "block"
-  document.getElementById("failLoad").style.display = "none"
-  $('#load-btn').click initializeExperiment
-
-
-initializeExperiment = (blocks) ->
+initializeExperiment = (trials) ->
   console.log 'INITIALIZE EXPERIMENT'
 
   #  ============================== #
@@ -41,18 +32,17 @@ initializeExperiment = (blocks) ->
   welcome =
     type: 'text'
     text: """
-    <h1>Graph-MDP Demo</h1>
+    <h1>Mouselab-MDP Demo</h1>
 
-    This is a demonstration of the Graph-MDP plugin.
+    This is a demonstration of the Mouselab-MDP plugin.
     <p>
     Press <b>space</b> to continue.
 
     """
 
   main =
-    type: 'graph'
-    centerMessage: 'A simple cross'
-    timeline: blocks.grid
+    type: 'mouselab-mdp'
+    timeline: trials
 
   experiment_timeline = [
     welcome

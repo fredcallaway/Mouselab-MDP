@@ -6,7 +6,7 @@ Fred Callaway
 
 Demonstrates the mouselab-mdp jspsych plugin
  */
-var createStartButton, initializeExperiment, loadJson;
+var initializeExperiment, loadJson;
 
 loadJson = function(file) {
   var result;
@@ -19,30 +19,21 @@ loadJson = function(file) {
 };
 
 $(window).on('load', function() {
-  var expData;
-  expData = loadJson("/static/json/condition_0_0.json");
-  console.log('expData', expData);
-  return initializeExperiment(expData.blocks);
+  var trials;
+  trials = loadJson("static/json/trials.json");
+  return initializeExperiment(trials);
 });
 
-createStartButton = function() {
-  document.getElementById("loader").style.display = "none";
-  document.getElementById("successLoad").style.display = "block";
-  document.getElementById("failLoad").style.display = "none";
-  return $('#load-btn').click(initializeExperiment);
-};
-
-initializeExperiment = function(blocks) {
+initializeExperiment = function(trials) {
   var experiment_timeline, main, welcome;
   console.log('INITIALIZE EXPERIMENT');
   welcome = {
     type: 'text',
-    text: "<h1>Graph-MDP Demo</h1>\n\nThis is a demonstration of the Graph-MDP plugin.\n<p>\nPress <b>space</b> to continue.\n"
+    text: "<h1>Mouselab-MDP Demo</h1>\n\nThis is a demonstration of the Mouselab-MDP plugin.\n<p>\nPress <b>space</b> to continue.\n"
   };
   main = {
-    type: 'graph',
-    centerMessage: 'A simple cross',
-    timeline: blocks.grid
+    type: 'mouselab-mdp',
+    timeline: trials
   };
   experiment_timeline = [welcome, main];
   return jsPsych.init({

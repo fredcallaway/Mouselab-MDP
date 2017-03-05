@@ -1,108 +1,50 @@
+.body-text {
+    max-width: 700px;
+}
 
 
 .canvas-container {
-  position: relative;
+  // border: thin blue dashed;
   margin: auto;
+  clear: both;
 }
 
-#graph-canvas {
-  float: left;
+#mouselab-canvas {
+  position: relative;
   // border: thin red solid;
 }
 
-.graph-header {
-    margin: 0;
+.mouselab-header {
+    // margin: 0;
     float: left;
-    margin-bottom: 0.3em;
+    margin-bottom: 0.5em;
     font-size: 20pt;
 }
 
-#graph-msg-left {
+#mouselab-msg-left {
   width: 20%;
   text-align: left;
 }
 
-#graph-msg-right {
+#mouselab-msg-right {
     width: 20%;
     text-align: right;
 }
-#graph-msg-center {
+#mouselab-msg-center {
     width: 60%;
     text-align: center;
 }
 
-#graph-msg-bottom {
+#mouselab-msg-bottom {
     width: 100%;
     font-size: 16pt;
     // font-weight: bold;
     text-align: center;
 }
 
-img.centered {
-  display: block;
-  margin-left: auto;
-  margin-right: auto
-}
 
-.body-text {
-    max-width: 700px;
-}
-#graph-score, #graph-moves {
+#mouselab-score, #mouselab-moves {
   font-weight: bold;
-}
-
-
-
-/* Center the loader */
-#loader {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 1;
-  width: 150px;
-  height: 150px;
-  margin: -75px 0 0 -75px;
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid #3498db;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
-}
-
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Add animation to "page content" */
-.animate-bottom {
-  position: relative;
-  -webkit-animation-name: animatebottom;
-  -webkit-animation-duration: 1s;
-  animation-name: animatebottom;
-  animation-duration: 1s
-}
-
-@-webkit-keyframes animatebottom {
-  from { bottom:-40px; opacity:0 } 
-  to { bottom:0px; opacity:1 }
-}
-
-@keyframes animatebottom { 
-  from{ bottom:-40px; opacity:0 } 
-  to{ bottom:0; opacity:1 }
-}
-
-#successLoad {
-  display: none;
-  text-align: center;
 }
 
 
