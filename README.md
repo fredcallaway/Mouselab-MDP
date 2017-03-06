@@ -10,4 +10,4 @@ Planning is a latent cognitive process that cannot be observed directly. This ma
 A basic description of how to use the plugin can be found in our RLDM paper. If you don't have access to the paper, email fredcallaway@berkeley.edu and ask for a copy. There is also a limited amount of inline documentation in [jspsych-mouselab-mdp.coffee](/jspsych-mouselab-mdp.coffee). Pay special attention to the constructor of `MouselabMDP`, around line 90.
 
 # Example experiment
-The code for the demo can be found in [experiment/](/experiment/). The stimulus specifications are in [experiment/json/trials.json](/experiment/json/trials.json)
+The code for the demo can be found in [experiment/](/experiment/). The stimulus specifications are in [experiment/static/json/trials.json](/experiment/json/trials.json)
