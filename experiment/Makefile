@@ -1,5 +1,5 @@
 # Compile coffeescript into javascript
-all: 
+exp: 
 	coffee -o static/js -cb src/*
 	bin/make_trials.py
 
@@ -7,5 +7,5 @@ all:
 watch:
 	coffee -o static/js -cbw src/*
 
-deploy:
+deploy: exp
 	rsync -av --delete-after --copy-links . cocosci@cocosci-fred.dreamhosters.com:/home/cocosci/cocosci.dreamhosters.com/webexpt/mouselab-demo
