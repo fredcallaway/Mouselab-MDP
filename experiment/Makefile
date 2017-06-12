@@ -1,6 +1,7 @@
 # Compile coffeescript into javascript
 all: 
 	coffee -o static/js -cb src/*
+	bin/make_trials.py
 
 # Continuously recompiles as changes are made.
 watch:

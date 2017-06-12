@@ -6,7 +6,27 @@ Fred Callaway
 
 Demonstrates the mouselab-mdp jspsych plugin
  */
-var initializeExperiment, loadJson;
+var checkWindowSize, initializeExperiment, loadJson;
+
+checkWindowSize = function(width, height, display) {
+  var maxHeight, win_width;
+  console.log('cws');
+  win_width = $(window).width();
+  maxHeight = $(window).height();
+  if ($(window).width() < width || $(window).height() < height) {
+    display.hide();
+    return $('#window_error').show();
+  } else {
+    $('#window_error').hide();
+    return display.show();
+  }
+};
+
+$(window).resize(function() {
+  return checkWindowSize(1000, 700, $('#jspsych-target'));
+});
+
+$(window).resize();
 
 loadJson = function(file) {
   var result;
@@ -25,17 +45,56 @@ $(window).on('load', function() {
 });
 
 initializeExperiment = function(trials) {
-  var experiment_timeline, main, welcome;
+  var experiment_timeline, i, main, trial, welcome;
   console.log('INITIALIZE EXPERIMENT');
+  console.log(trials);
   welcome = {
     type: 'text',
     text: "<h1>Mouselab-MDP Demo</h1>\n\nThis is a demonstration of the Mouselab-MDP plugin.\n<p>\nPress <b>space</b> to continue.\n"
   };
+  trial = {
+    type: 'mouselab-mdp',
+    graph: {
+      B: {
+        up: [5, 'A'],
+        down: [-5, 'C']
+      },
+      A: {},
+      C: {}
+    },
+    layout: {
+      A: [0, 1],
+      B: [0, 2],
+      C: [0, 3]
+    },
+    initial: 'B',
+    stateLabels: {
+      A: 'A',
+      B: 'B',
+      C: 'C'
+    },
+    stateDisplay: 'always',
+    stateClickCost: 0,
+    edgeLabels: 'reward',
+    edgeDisplay: 'click',
+    edgeClickCost: 0,
+    stimId: 1994,
+    playerImage: 'static/images/plane.png',
+    playerImageScale: 0.3,
+    size: 120,
+    leftMessage: 'Left Message',
+    centerMessage: 'Center Message'
+  };
+  i = 0;
+  trials.push(trial);
   main = {
     type: 'mouselab-mdp',
+    leftMessage: function() {
+      return "Round: " + (++i) + "/" + trials.length;
+    },
     timeline: trials
   };
-  experiment_timeline = [welcome, main];
+  experiment_timeline = [main];
   return jsPsych.init({
     display_element: $('#jspsych-target'),
     timeline: experiment_timeline,
