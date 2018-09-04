@@ -19,7 +19,7 @@ checkWindowSize = (width, height, display) ->
     $('#window_error').hide()
     display.show()
 
-$(window).resize -> checkWindowSize 1000, 700, $('#jspsych-target')
+$(window).resize -> checkWindowSize 800, 600, $('#jspsych-target')
 $(window).resize()
 
 

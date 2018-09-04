@@ -23,7 +23,7 @@ checkWindowSize = function(width, height, display) {
 };
 
 $(window).resize(function() {
-  return checkWindowSize(1000, 700, $('#jspsych-target'));
+  return checkWindowSize(800, 600, $('#jspsych-target'));
 });
 
 $(window).resize();
