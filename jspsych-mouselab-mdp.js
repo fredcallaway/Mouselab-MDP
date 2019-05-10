@@ -207,6 +207,7 @@ jsPsych.plugins['mouselab-mdp'] = (function() {
     MouselabMDP.prototype.clickState = function(g, s) {
       LOG_DEBUG("clickState " + s);
       if (this.stateLabels && this.stateDisplay === 'click' && !g.label.text) {
+        this.addScore(-this.stateClickCost);
         g.setLabel(this.stateLabels[s]);
         return this.recordQuery('click', 'state', s);
       }
@@ -231,6 +232,7 @@ jsPsych.plugins['mouselab-mdp'] = (function() {
     MouselabMDP.prototype.clickEdge = function(g, s0, r, s1) {
       LOG_DEBUG("clickEdge " + s0 + " " + r + " " + s1);
       if (this.edgeLabels && this.edgeDisplay === 'click' && !g.label.text) {
+        this.addScore(-this.edgeClickCost);
         g.setLabel(this.getEdgeLabel(s0, r, s1));
         return this.recordQuery('click', 'edge', s0 + "__" + s1);
       }

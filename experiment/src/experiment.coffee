@@ -77,7 +77,7 @@ initializeExperiment = (trials) ->
     stateClickCost: 0  # subtracted from score every time a state is clicked
     edgeLabels: 'reward'  # object mapping from edge names (s0 + '__' + s1) to labels
     edgeDisplay: 'click'  # one of 'never', 'hover', 'click', 'always'
-    edgeClickCost: 0  # subtracted from score every time an edge is clicked
+    edgeClickCost: 1  # subtracted from score every time an edge is clicked
     stimId:1994  # for your own data-keeping
     playerImage: 'static/images/plane.png'
     playerImageScale: 0.3
