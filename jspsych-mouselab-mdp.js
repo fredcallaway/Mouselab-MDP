@@ -294,7 +294,7 @@ MouselabMDP = (function() {
     }
     return this.keyListener = this.jsPsych.pluginAPI.getKeyboardResponse({
       valid_responses: keys,
-      rt_method: 'date',
+      rt_method: 'performance',
       persist: false,
       allow_held_key: false,
       callback_function: (function(_this) {
@@ -393,7 +393,7 @@ MouselabMDP = (function() {
     this.lowerMessage.html("<b>Press any key to continue.</br>");
     return this.keyListener = this.jsPsych.pluginAPI.getKeyboardResponse({
       valid_responses: [],
-      rt_method: 'date',
+      rt_method: 'performance',
       persist: false,
       allow_held_key: false,
       callback_function: (function(_this) {
