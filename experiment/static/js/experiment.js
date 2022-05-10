@@ -107,7 +107,7 @@ initializeExperiment = function(trials) {
     timeline: trials
   };
   // welcome
-  experiment_timeline = [main];
+  experiment_timeline = [welcome, main];
   // ================================================ #
   // ========= START AND END THE EXPERIMENT ========= #
   // ================================================ #
