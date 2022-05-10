@@ -111,15 +111,16 @@ initializeExperiment = function(trials) {
   // ================================================ #
   // ========= START AND END THE EXPERIMENT ========= #
   // ================================================ #
-  return jsPsych.init({
-    display_element: $('#jspsych-target'),
+  var jsPsych = initJsPsych({
+    // display_element: $('#jspsych-target'),
     timeline: experiment_timeline,
     // show_progress_bar: true
-    on_finish: function() {
+    on_finish: function () {
       return jsPsych.data.displayData();
     },
-    on_data_update: function(data) {
+    on_data_update: function (data) {
       return console.log('data', data);
     }
   });
-};
+  jsPsych.run(experiment_timeline);
+}
