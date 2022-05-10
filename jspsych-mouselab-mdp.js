@@ -398,7 +398,7 @@ MouselabMDP = (function() {
       allow_held_key: false,
       callback_function: (function(_this) {
         return function(info) {
-          _this.display.empty();
+          _this.display.innerHTML = "";
           return _this.jsPsych.finishTrial(_this.data);
         };
       })(this)
