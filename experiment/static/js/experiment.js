@@ -60,7 +60,7 @@ initializeExperiment = function(trials) {
     choices: [' ']
   };
   trial = {
-    type: 'mouselab-mdp', // use the jspsych plugin
+    type: jsPsychMouselabMDP, // use the jspsych plugin
     // ---------- MANDATORY PARAMETERS ---------- #
     graph: {
       B: {
@@ -100,8 +100,8 @@ initializeExperiment = function(trials) {
   i = 0;
   trials.push(trial);
   main = {
-    type: 'mouselab-mdp',
-    leftMessage: function() {
+    type: jsPsychMouselabMDP,
+    leftMessage: function () {
       return `Round: ${++i}/${trials.length}`;
     },
     timeline: trials
