@@ -55,8 +55,9 @@ initializeExperiment = function(trials) {
   //  ========= EXPERIMENT ========= #
   //  ============================== #
   welcome = {
-    type: 'text',
-    text: "<h1>Mouselab-MDP Demo</h1>\n\nThis is a demonstration of the Mouselab-MDP plugin.\n<p>\nPress <b>space</b> to continue.\n"
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: "<h1>Mouselab-MDP Demo</h1>\n\nThis is a demonstration of the Mouselab-MDP plugin.\n<p>\nPress <b>space</b> to continue.\n",
+    choices: [' ']
   };
   trial = {
     type: 'mouselab-mdp', // use the jspsych plugin
