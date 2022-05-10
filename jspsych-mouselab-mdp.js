@@ -392,7 +392,7 @@ MouselabMDP = (function() {
   MouselabMDP.prototype.endTrial = function() {
     this.lowerMessage.html("<b>Press any key to continue.</br>");
     return this.keyListener = this.jsPsych.pluginAPI.getKeyboardResponse({
-      valid_responses: [],
+      valid_responses: "ALL_KEYS",
       rt_method: 'performance',
       persist: false,
       allow_held_key: false,
