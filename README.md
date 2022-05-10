@@ -42,3 +42,11 @@ trial =
   centerMessage: 'Center Message'
 ```
 
+## Running Locally
+To run the code locally, install [psiturk](https://psiturk.readthedocs.io/en/latest/quickstart.html) and then navigate to the `experiment` directory and run locally:
+
+```psiturk server start```
+
+When done, you should run:
+
+```psiturk server stop```
