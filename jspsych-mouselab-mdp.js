@@ -89,7 +89,8 @@ KEY_DESCRIPTION = "Navigate with the arrow keys.";
 
 MouselabMDP = (function() {
   function MouselabMDP(config) {
-    this.jsPsych = bind(this.jsPsych, this);this.checkFinished = bind(this.checkFinished, this);
+    this.jsPsych = bind(this.jsPsych, this);
+    this.checkFinished = bind(this.checkFinished, this);
     this.endTrial = bind(this.endTrial, this);
     this.buildMap = bind(this.buildMap, this);
     this.initPlayer = bind(this.initPlayer, this);
