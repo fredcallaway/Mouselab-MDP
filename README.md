@@ -2,6 +2,9 @@
 Mouselab-MDP is a [JsPsych](https://github.com/jodeleeuw/jsPsych/) plugin that renders Markov decision processes (MDP) for participants to navigate through. Optionally, information about the environment can be presented only when the participant asks for it, thus creating a record of the information considered. Try out the live demo mouselab-demo [here](http://cocosci.dreamhosters.com/webexpt/mouselab-demo/).
 
 # Usage
+
+To view the experiment, you must use an http server. You can start one by running `python -m http.server` in the experiment/ directory. Then visit http://localhost:8000/ in your browser.
+
 A basic description of how to use the plugin can be found in our RLDM [paper](https://www.researchgate.net/publication/314258117_Mouselab-MDP_A_new_paradigm_for_tracing_how_people_plan) . There is also a limited amount of inline documentation in the source coffeescript. Pay special attention to the constructor of `MouselabMDP`, beginning at [line 90](https://github.com/fredcallaway/Mouselab-MDP/blob/master/jspsych-mouselab-mdp.coffee#L90).
 
 Note that we have included the javascript which compiles from coffeescript. You only need to link to the javascript in your own code (I just include the coffeescript for reference).
