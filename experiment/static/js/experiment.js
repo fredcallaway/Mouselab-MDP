@@ -55,11 +55,12 @@ initializeExperiment = function(trials) {
   //  ========= EXPERIMENT ========= #
   //  ============================== #
   welcome = {
-    type: 'text',
-    text: "<h1>Mouselab-MDP Demo</h1>\n\nThis is a demonstration of the Mouselab-MDP plugin.\n<p>\nPress <b>space</b> to continue.\n"
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: "<h1>Mouselab-MDP Demo</h1>\n\nThis is a demonstration of the Mouselab-MDP plugin.\n<p>\nPress <b>space</b> to continue.\n",
+    choices: [' ']
   };
   trial = {
-    type: 'mouselab-mdp', // use the jspsych plugin
+    type: jsPsychMouselabMDP, // use the jspsych plugin
     // ---------- MANDATORY PARAMETERS ---------- #
     graph: {
       B: {
@@ -99,26 +100,27 @@ initializeExperiment = function(trials) {
   i = 0;
   trials.push(trial);
   main = {
-    type: 'mouselab-mdp',
-    leftMessage: function() {
+    type: jsPsychMouselabMDP,
+    leftMessage: function () {
       return `Round: ${++i}/${trials.length}`;
     },
     timeline: trials
   };
   // welcome
-  experiment_timeline = [main];
+  experiment_timeline = [welcome, main];
   // ================================================ #
   // ========= START AND END THE EXPERIMENT ========= #
   // ================================================ #
-  return jsPsych.init({
-    display_element: $('#jspsych-target'),
+  var jsPsych = initJsPsych({
+    // display_element: $('#jspsych-target'),
     timeline: experiment_timeline,
     // show_progress_bar: true
-    on_finish: function() {
+    on_finish: function () {
       return jsPsych.data.displayData();
     },
-    on_data_update: function(data) {
+    on_data_update: function (data) {
       return console.log('data', data);
     }
   });
-};
+  jsPsych.run(experiment_timeline);
+}

@@ -1,1 +1,4 @@
 __pycache__/
+experiment/.psiturk_history
+experiment/server.log
+experiment/participants.db
